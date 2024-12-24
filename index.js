@@ -83,10 +83,11 @@ app.get('/games', async (req, res) => {
 
 
   app.get('/games/details/:id', async (req, res) => {
-    const id = parseInt(req.params.id);
+    const id = parseFloat(req.params.id);
 
     try {
        const result = await getGameById(id);
+
        if(result.game === undefined){
         return res.status(404).json({
           message: 'Game not found'
@@ -209,6 +210,13 @@ app.get('/players', async (req, res) => {
 
   try {
     const result = await getAllPlayers();
+
+    if(result.players.length === 0) {
+      res.status(200).json({
+         message: "No player found"
+      })
+    }
+
     res.status(200).json(result);
   } catch(error) {
     res.status(500).json({message: error.message})
@@ -226,12 +234,12 @@ async function getPlayerById(id) {
 }
 
 app.get('/players/details/:id', async (req, res) => {
-  const id = parseInt(req.params.id);
+  const id = parseFloat(req.params.id);
   
   try{
      const result = await getPlayerById(id);
 
-     if(!result.player){
+     if(result.player === undefined){
       return res.status(404).json({
         message: 'Player not found'
       })
@@ -329,9 +337,9 @@ app.get('/tournaments', async (req, res) => {
 
 // get tournament by id
 
-async function getTournamentById(gameId) {
-  const query = 'SELECT * FROM tournaments WHERE gameid = ?';
-  const response = await db.get(query, [gameId]);
+async function getTournamentById(id) {
+  const query = 'SELECT * FROM tournaments WHERE id = ?';
+  const response = await db.get(query, [id]);
   return {
     tournament: response
   }
@@ -343,7 +351,7 @@ app.get('/tournaments/details/:id', async (req, res) => {
   try {
     const result = await getTournamentById(id);
 
-    if(!result.tournament){
+    if(result.tournament === undefined){
       return res.status(404).json({
         message: 'Tournament not found'
       })
@@ -362,7 +370,7 @@ async function getTournamentByGameId(gameId) {
   const query = 'SELECT * FROM tournaments WHERE gameId = ?';
   const response = await db.all(query, [gameId]);
   return {
-    tournaments: response
+    tournament: response
   }
 }
 
@@ -373,9 +381,9 @@ app.get('/tournaments/game/:gameId', async (req, res) => {
   try {
     const result = await getTournamentByGameId(gameId);
 
-    if(result.tournaments.length === 0){
+    if(result.tournament === undefined){
       return res.status(404).json({
-        message: 'No tournaments found in game' + gameId
+        message: 'No tournament found in game' + gameId
       })
     }
     res.status(200).json(result);
