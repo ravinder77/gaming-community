@@ -61,8 +61,8 @@ app.get('/games', async (req, res) => {
     }
 
     res.status(200).json(result)
-  } catch(error){
 
+  } catch(error){
     res.status(500).json({message: error.message})
   }
 
@@ -87,7 +87,7 @@ app.get('/games', async (req, res) => {
 
     try {
        const result = await getGameById(id);
-       if(!result.game){
+       if(result.game === undefined){
         return res.status(404).json({
           message: 'Game not found'
         })
@@ -265,7 +265,6 @@ app.get('/players/platform/:platform', async (req, res) => {
     }
 
 
-
     res.status(200).json(result);
   } catch(error) {
     res.status(500).json({message: error.message})
@@ -294,8 +293,6 @@ app.get('/players/sort-by-rating', async (req, res) => {
       })
     }
 
-
-
     res.status(200).json(result);
   } catch(error) {
     res.status(500).json({message: error.message})
@@ -322,7 +319,6 @@ app.get('/tournaments', async (req, res) => {
       message: 'No tournaments found'
     })
    }
-
 
     res.status(200).json(result);
   } catch(error) {
