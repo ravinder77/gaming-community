@@ -396,7 +396,7 @@ app.get('/tournaments/game/:gameId', async (req, res) => {
 // sort by pool prize
 
 async function sortTournamentsByPrizePool() {
-  const query = 'SELECT * FROM tournaments ORDER BY prizepool DESC';
+  const query = 'SELECT * FROM tournaments ORDER BY prizePool DESC';
   const response = await db.all(query);
   return {
     tournaments: response
@@ -414,8 +414,7 @@ app.get('/tournaments/sort-by-prize-pool', async (req, res) => {
         message: 'No tournaments found'
       })
     }
-
-
+    
     res.status(200).json(result);
   } catch(error) {
     res.status(500).json({message: error.message})
